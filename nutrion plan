@@ -1,0 +1,123 @@
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+class NutritionPlan {
+    private int caloricIntake;
+    private int carbohydrates;
+    private int proteins;
+    private int fats;
+    private List<String> mealPlans;
+    private String fitnessGoal;
+    private List<String> dietaryRestrictions;
+
+    public NutritionPlan() {
+        mealPlans = new ArrayList<>();
+        dietaryRestrictions = new ArrayList<>();
+    }
+
+    public void setCaloricIntake(int caloricIntake) {
+        this.caloricIntake = caloricIntake;
+    }
+
+    public void setMacronutrientRatios(int carbohydrates, int proteins, int fats) {
+        this.carbohydrates = carbohydrates;
+        this.proteins = proteins;
+        this.fats = fats;
+    }
+
+    public void setMealPlans(List<String> mealPlans) {
+        this.mealPlans = mealPlans;
+    }
+
+    public void setFitnessGoal(String fitnessGoal) {
+        this.fitnessGoal = fitnessGoal;
+    }
+
+    public void setDietaryRestrictions(List<String> dietaryRestrictions) {
+        this.dietaryRestrictions = dietaryRestrictions;
+    }
+
+    @Override
+    public String toString() {
+        return "Nutrition Plan:\n" +
+                "Caloric Intake: " + caloricIntake + " kcal\n" +
+                "Macronutrient Ratios: Carbohydrates=" + carbohydrates + "%, Proteins=" + proteins + "%, Fats=" + fats + "%\n" +
+                "Meal Plans: " + mealPlans.toString() + "\n" +
+                "Fitness Goal: " + fitnessGoal + "\n" +
+                "Dietary Restrictions: " + dietaryRestrictions.toString();
+    }
+}
+
+interface NutritionPlanBuilder {
+    void setCaloricIntake(int caloricIntake);
+    void setMacronutrientRatios(int carbohydrates, int proteins, int fats);
+    void setMealPlans(List<String> mealPlans);
+    void setFitnessGoal(String fitnessGoal);
+    void setDietaryRestrictions(List<String> dietaryRestrictions);
+    NutritionPlan build();
+}
+
+class NutritionPlanDirector {
+    private NutritionPlanBuilder builder;
+
+    public NutritionPlanDirector(NutritionPlanBuilder builder) {
+        this.builder = builder;
+    }
+
+    public void createNutritionPlan() {
+        builder.setCaloricIntake(2000);
+        builder.setMacronutrientRatios(50, 30, 20);
+        builder.setMealPlans(Arrays.asList("Breakfast: Eggs and toast", "Lunch: Chicken salad", "Dinner: Grilled fish with vegetables"));
+        builder.setFitnessGoal("weight loss");
+        builder.setDietaryRestrictions(Arrays.asList("gluten-free", "lactose-free"));
+    }
+}
+
+class WeightLossNutritionPlanBuilder implements NutritionPlanBuilder {
+    private NutritionPlan nutritionPlan;
+
+    public WeightLossNutritionPlanBuilder() {
+        this.nutritionPlan = new NutritionPlan();
+    }
+
+    @Override
+    public void setCaloricIntake(int caloricIntake) {
+        nutritionPlan.setCaloricIntake(caloricIntake);
+    }
+
+    @Override
+    public void setMacronutrientRatios(int carbohydrates, int proteins, int fats) {
+        nutritionPlan.setMacronutrientRatios(carbohydrates, proteins, fats);
+    }
+
+    @Override
+    public void setMealPlans(List<String> mealPlans) {
+        nutritionPlan.setMealPlans(mealPlans);
+    }
+
+    @Override
+    public void setFitnessGoal(String fitnessGoal) {
+        nutritionPlan.setFitnessGoal(fitnessGoal);
+    }
+
+    @Override
+    public void setDietaryRestrictions(List<String> dietaryRestrictions) {
+        nutritionPlan.setDietaryRestrictions(dietaryRestrictions);
+    }
+
+    @Override
+    public NutritionPlan build() {
+        return nutritionPlan;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        NutritionPlanBuilder builder = new WeightLossNutritionPlanBuilder();
+        NutritionPlanDirector director = new NutritionPlanDirector(builder);
+        director.createNutritionPlan();
+        NutritionPlan nutritionPlan = builder.build();
+        System.out.println(nutritionPlan);
+    }
+}
