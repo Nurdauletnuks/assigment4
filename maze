@@ -1,0 +1,40 @@
+import java.util.HashMap;
+import java.util.Map;
+public class MazePrototypeFactory {
+    private Map<String, Room> roomPrototypes = new HashMap<>();
+    private Map<String, Wall> wallPrototypes = new HashMap<>();
+
+    public void registerPrototype(String key, Room room) {
+        roomPrototypes.put(key, room);
+    }
+
+    public void registerPrototype(String key, Wall wall) {
+        wallPrototypes.put(key, wall);
+    }
+
+    public Maze createMaze(String roomType, String wallType) {
+        Maze maze = new Maze();
+
+        Room roomPrototype = roomPrototypes.get(roomType).clone();
+        Wall wallPrototype = wallPrototypes.get(wallType).clone();
+
+        maze.addRoom(roomPrototype);
+
+        return maze;
+    }
+}
+
+public class MazeGame {
+    public static void main(String[] argv) {
+        MazePrototypeFactory factory = new MazePrototypeFactory();
+
+        factory.registerPrototype("standardRoom", new Room(0));
+        factory.registerPrototype("doorWall", new DoorWall(null, null));
+
+        createMaze(factory);
+    }
+
+    private static void createMaze(MazePrototypeFactory factory) {
+        Maze maze = factory.createMaze("standardRoom", "doorWall");
+    }
+}
